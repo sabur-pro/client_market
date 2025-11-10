@@ -8,7 +8,7 @@ const authRoutes = ['/login', '/register'];
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  const accessToken = request.cookies.get('access_token')?.value;
+  const accessToken = request.cookies.get('client_access_token')?.value;
   const hasToken = !!accessToken;
   
   if (pathname === '/') {
