@@ -39,7 +39,7 @@ const getCookie = (name: string): string | null => {
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== 'undefined') {
-      const token = getCookie('access_token') || localStorage.getItem('access_token');
+      const token = getCookie('client_access_token') || localStorage.getItem('client_access_token');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -61,12 +61,12 @@ apiClient.interceptors.response.use(
       console.log('[Auth] Received 401 error, checking tokens...');
       if (originalRequest.url?.includes('/auth/refresh')) {
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+          localStorage.removeItem('client_access_token');
+          localStorage.removeItem('client_refresh_token');
           localStorage.removeItem('user');
           
-          document.cookie = 'access_token=; path=/; max-age=0';
-          document.cookie = 'refresh_token=; path=/; max-age=0';
+          document.cookie = 'client_access_token=; path=/; max-age=0';
+          document.cookie = 'client_refresh_token=; path=/; max-age=0';
           
           window.location.href = '/login';
         }
@@ -92,16 +92,16 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       const refreshToken = typeof window !== 'undefined' 
-        ? (getCookie('refresh_token') || localStorage.getItem('refresh_token'))
+        ? (getCookie('client_refresh_token') || localStorage.getItem('client_refresh_token'))
         : null;
 
       if (!refreshToken) {
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('access_token');
+          localStorage.removeItem('client_access_token');
           localStorage.removeItem('user');
           
-          document.cookie = 'access_token=; path=/; max-age=0';
-          document.cookie = 'refresh_token=; path=/; max-age=0';
+          document.cookie = 'client_access_token=; path=/; max-age=0';
+          document.cookie = 'client_refresh_token=; path=/; max-age=0';
           
           window.location.href = '/login';
         }
@@ -128,11 +128,11 @@ apiClient.interceptors.response.use(
         console.log('[Auth] Token refresh successful');
 
         if (typeof window !== 'undefined') {
-          localStorage.setItem('access_token', access_token);
-          localStorage.setItem('refresh_token', refresh_token);
+          localStorage.setItem('client_access_token', access_token);
+          localStorage.setItem('client_refresh_token', refresh_token);
           
-          document.cookie = `access_token=${access_token}; path=/; max-age=${60 * 1}`; 
-          document.cookie = `refresh_token=${refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`; 
+          document.cookie = `client_access_token=${access_token}; path=/; max-age=${60 * 1}`; 
+          document.cookie = `client_refresh_token=${refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`; 
         }
 
         if (originalRequest.headers) {
@@ -151,12 +151,12 @@ apiClient.interceptors.response.use(
         if (err.response?.status === 401 || err.response?.status === 403) {
           console.log('[Auth] Refresh token invalid, redirecting to login');
           if (typeof window !== 'undefined') {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('client_access_token');
+            localStorage.removeItem('client_refresh_token');
             localStorage.removeItem('user');
             
-            document.cookie = 'access_token=; path=/; max-age=0';
-            document.cookie = 'refresh_token=; path=/; max-age=0';
+            document.cookie = 'client_access_token=; path=/; max-age=0';
+            document.cookie = 'client_refresh_token=; path=/; max-age=0';
             
             window.location.href = '/login';
           }
