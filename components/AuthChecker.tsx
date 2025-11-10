@@ -24,7 +24,7 @@ const AuthChecker: FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = getCookie('access_token') || localStorage.getItem('access_token');
+      const token = getCookie('client_access_token') || localStorage.getItem('client_access_token');
       if (token && !isAuthenticated && !loading) {
         dispatch(checkAuthAsync());
       }
@@ -32,15 +32,14 @@ const AuthChecker: FC = () => {
   }, [dispatch, isAuthenticated, loading]);
 
   useEffect(() => {
-    if (loading) return; // Don't redirect while checking auth
+    if (loading) return;
 
     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
     const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
-    // Redirect to login if trying to access protected route without auth
     if (isProtectedRoute && !isAuthenticated) {
       const token = typeof window !== 'undefined' 
-        ? (getCookie('access_token') || localStorage.getItem('access_token'))
+        ? (getCookie('client_access_token') || localStorage.getItem('client_access_token'))
         : null;
       if (!token) {
         router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
