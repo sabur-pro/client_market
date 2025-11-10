@@ -5,6 +5,7 @@ import StoreProvider from "@/lib/StoreProvider";
 import ConditionalNav from "@/components/ConditionalNav";
 import CartInitializer from "@/components/CartInitializer";
 import AuthChecker from "@/components/AuthChecker";
+import { TokenMigration } from '@/components/TokenMigration';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <TokenMigration />
         <StoreProvider>
           <AuthChecker />
           <CartInitializer />
