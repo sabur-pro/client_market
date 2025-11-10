@@ -22,12 +22,12 @@ export const loginAsync = createAsyncThunk(
       const response = await authApi.login(credentials);
       
       if (typeof window !== 'undefined') {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
+        localStorage.setItem('client_access_token', response.access_token);
+        localStorage.setItem('client_refresh_token', response.refresh_token);
         localStorage.setItem('user', JSON.stringify(response.user));
         
-        document.cookie = `access_token=${response.access_token}; path=/; max-age=${60 * 1}`; 
-        document.cookie = `refresh_token=${response.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`; 
+        document.cookie = `client_access_token=${response.access_token}; path=/; max-age=${60 * 1}`; 
+        document.cookie = `client_refresh_token=${response.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`; 
       }
       
       return response.user;
@@ -44,12 +44,12 @@ export const registerAsync = createAsyncThunk(
       const response = await authApi.register(data);
       
       if (typeof window !== 'undefined') {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
+        localStorage.setItem('client_access_token', response.access_token);
+        localStorage.setItem('client_refresh_token', response.refresh_token);
         localStorage.setItem('user', JSON.stringify(response.user));
         
-        document.cookie = `access_token=${response.access_token}; path=/; max-age=${60 * 1}`;
-        document.cookie = `refresh_token=${response.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+        document.cookie = `client_access_token=${response.access_token}; path=/; max-age=${60 * 1}`;
+        document.cookie = `client_refresh_token=${response.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
       }
       
       return response.user;
@@ -66,23 +66,23 @@ export const logoutAsync = createAsyncThunk(
       await authApi.logout();
       
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('client_access_token');
+        localStorage.removeItem('client_refresh_token');
         localStorage.removeItem('user');
         
-        document.cookie = 'access_token=; path=/; max-age=0';
-        document.cookie = 'refresh_token=; path=/; max-age=0';
+        document.cookie = 'client_access_token=; path=/; max-age=0';
+        document.cookie = 'client_refresh_token=; path=/; max-age=0';
       }
       
       return null;
     } catch (error: any) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('client_access_token');
+        localStorage.removeItem('client_refresh_token');
         localStorage.removeItem('user');
         
-        document.cookie = 'access_token=; path=/; max-age=0';
-        document.cookie = 'refresh_token=; path=/; max-age=0';
+        document.cookie = 'client_access_token=; path=/; max-age=0';
+        document.cookie = 'client_refresh_token=; path=/; max-age=0';
       }
       return null;
     }
@@ -102,7 +102,7 @@ export const checkAuthAsync = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       if (typeof window !== 'undefined') {
-        const token = getCookie('access_token') || localStorage.getItem('access_token');
+        const token = getCookie('client_access_token') || localStorage.getItem('client_access_token');
         const userStr = localStorage.getItem('user');
         
         if (token && userStr) {
