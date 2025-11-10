@@ -18,7 +18,7 @@ const CartInitializer: FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = getCookie('access_token') || localStorage.getItem('access_token');
+      const token = getCookie('client_access_token') || localStorage.getItem('client_access_token');
       if (token && isAuthenticated) {
         dispatch(fetchCart());
       }
